@@ -1,64 +1,22 @@
 pipeline {
     agent any
-
-    environment {
-        PROJECT_NAME = "MyProject"
-    }
-
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/your_username/your_repository.git'
+                // Checkout the code from the GitHub repository
+                checkout scm
             }
         }
-
-        stage('Build') {
+        stage('Read Text File') {
             steps {
                 script {
-                    echo "Building the project..."
-                    sh 'mvn clean install'
+                    // Read the content of the text file from the repository
+                    def fileContent = readFile('New Text Document.txt')
+                    
+                    // Print the content to the Jenkins console log
+                    echo "Content of the text file: ${fileContent}"
                 }
             }
-        }
-
-        stage('Test') {
-            steps {
-                script {
-                    echo "Running tests..."
-                    sh 'mvn test'
-                }
-            }
-        }
-
-        stage('Deploy') {
-            steps {
-                script {
-                    echo "Deploying the project..."
-                    sh './deploy.sh'
-                }
-            }
-        }
-
-        stage('Cleanup') {
-            steps {
-                script {
-                    echo "Cleaning up..."
-                    sh 'mvn clean'
-                }
-            }
-        }
-    }
-
-    post {
-        success {
-            echo "Build and tests passed successfully!"
-        }
-        failure {
-            echo "Build or tests failed. Please check the logs."
-        }
-        always {
-            echo "This block will always run regardless of the result."
         }
     }
 }
- 
